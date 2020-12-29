@@ -8,15 +8,21 @@
     <!-- Project Card Example -->
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Form Add</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Form Edit</h6>
       </div>
+      <?php
+      $id_jabatan = base64_decode($_GET['id']);
+      $jabatan = $conn->query("SELECT * FROM tb_jabatan WHERE id_jabatan = '$id_jabatan'");
+      $dataJab = $jabatan->fetch_assoc();
+      ?>
       <div class="card-body">
         <form action="" method="POST">
           <div class="form-group">
             <label for="jabatan">Jabatan</label>
-            <input type="text" class="form-control" name="jabatan" id="jabatan" autocomplete="off" autofocus required>
+            <input type="text" class="form-control" name="jabatan" value="<?= $dataJab['jabatan']; ?>" id="jabatan" autocomplete="off" autofocus required>
           </div>
-          <button type="submit" name="add" class="btn btn-primary">Submit</button>
+          <button type="submit" name="edit" class="btn btn-sm btn-primary">Submit</button>
+          <a href="?page=jabatan" class="btn btn-sm btn-secondary">Cancel</a>
         </form>
       </div>
     </div>
@@ -36,29 +42,27 @@
           <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
               <tr>
-                <th class="text-center">No</th>
-                <th class="text-center">Jabatan</th>
+                <th>No</th>
+                <th>Jabatan</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-
               <?php
 
               $no = 1;
-              $jab = $conn->query("SELECT * FROM tb_jabatan");
-              while ($data = $jab->fetch_assoc()) {
+              $gol = $conn->query("SELECT * FROM tb_jabatan");
+              while ($data = $gol->fetch_assoc()) {
 
               ?>
-
                 <tr>
-                  <td width="2%" class="text-center"><?= $no++; ?></td>
+                  <td width="2%"><?= $no++; ?></td>
                   <td><?= $data['jabatan']; ?></td>
                   <td width="5%">
-                    <a href="?page=jabatan&action=edit&id=<?= base64_encode($data['id_jabatan']); ?>" class="btn btn-success btn-circle btn-sm">
+                    <a href="#" class="btn btn-success btn-circle btn-sm">
                       <i class="fas fa-check"></i>
                     </a>
-                    <a href="#myModalJab" class="btn btn-danger btn-circle btn-sm deleteJab" data-id="<?= $data['id_jabatan']; ?>" role="button" data-toggle="modal">
+                    <a href="#" class="btn btn-danger btn-circle btn-sm">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>
@@ -74,17 +78,17 @@
 
 <?php
 
-if (isset($_POST['add'])) {
+if (isset($_POST['edit'])) {
   $jabatan = $_POST['jabatan'];
 
-  $sql = $conn->query("INSERT INTO tb_jabatan (jabatan) VALUES ('$jabatan')");
+  $sql = $conn->query("UPDATE tb_jabatan SET jabatan='$jabatan' WHERE id_jabatan = '$id_jabatan'");
 
   if ($sql) {
 ?>
     <script>
       setTimeout(function() {
         swal({
-          title: 'Data berhasil ditambah',
+          title: 'Data berhasil diubah',
           icon: 'success',
         });
       }, 10);

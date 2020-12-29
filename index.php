@@ -35,12 +35,12 @@ include('config.php');
   <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
         <div class="sidebar-brand-icon">
-          <i class="fas fa-list"></i>
+          <i class="fas fa-paper-plane"></i>
         </div>
         <div class="sidebar-brand-text mx-3">SPPD</div>
       </a>
@@ -66,7 +66,7 @@ include('config.php');
       <!-- Nav Item - Data Master -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-cog"></i>
+          <i class="fas fa-fw fa-database"></i>
           <span>Data Master</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -91,13 +91,13 @@ include('config.php');
       <!-- Nav Item - SPPD -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          <i class="fas fa-fw fa-cog"></i>
+          <i class="fas fa-fw fa-file-alt"></i>
           <span>Data SPPD</span>
         </a>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">master</h6>
-            <a class="collapse-item" href="#">SPPD</a>
+            <a class="collapse-item" href="?page=sppd">SPPD</a>
             <a class="collapse-item" href="#">Cetak SPPD</a>
           </div>
         </div>
@@ -233,6 +233,16 @@ include('config.php');
             } elseif ($action == "delete") {
               include "page/tingkat/delete.php";
             }
+          } elseif ($page == "sppd") {
+            if ($action == "") {
+              include "page/sppd/sppd.php";
+            } elseif ($action == "add") {
+              include "page/sppd/add.php";
+            } elseif ($action == "edit") {
+              include "page/sppd/edit.php";
+            } elseif ($action == "delete") {
+              include "page/sppd/delete.php";
+            }
           } else {
             include "dashboard.php";
           }
@@ -287,6 +297,86 @@ include('config.php');
     </div>
   </div>
 
+<!-- Modal Hapus Golongan -->
+  <div class="modal small fade" id="myModalGol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+            </div>
+            <div class="modal-body">
+                Yakin menghapus data ini..?
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger"  id="modalDeleteGol" >Delete</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Hapus Jabatan -->
+  <div class="modal small fade" id="myModalJab" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+            </div>
+            <div class="modal-body">
+                Yakin menghapus data ini..?
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger"  id="modalDeleteJab" >Delete</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Hapus Tingkat -->
+  <div class="modal small fade" id="myModalTing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+            </div>
+            <div class="modal-body">
+                Yakin menghapus data ini..?
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger"  id="modalDeleteTing" >Delete</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Hapus Pegawai -->
+  <div class="modal small fade" id="myModalPeg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+            </div>
+            <div class="modal-body">
+                Yakin menghapus data ini..?
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> 
+               <a href="#" class="btn btn-danger"  id="modalDeletePeg" >Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
   <!-- Bootstrap core JavaScript-->
   <script src="asset/vendor/jquery/jquery.min.js"></script>
   <script src="asset/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -306,21 +396,31 @@ include('config.php');
   <script src="asset/js/demo/datatables-demo.js"></script>
 
   <script>
-    jQuery(document).ready(function($) {
-      $('.delete').on('click', function() {
-        var getLink = $(this).attr('href');
-        swal({
-          title: 'Alert',
-          text: 'Hapus Data?',
-          html: true,
-          confirmButtonColor: '#d9534f',
-          showCancelButton: true,
-        }, function() {
-          window.location.href = "?page=golongan"
-        });
-        return false;
-      });
-    });
+    $('.deleteGol').click(function(){
+        var id=$(this).data('id');
+        $('#modalDeleteGol').attr('href','?page=golongan&action=delete&id='+id);
+    })
+  </script>
+
+  <script>
+    $('.deleteJab').click(function(){
+        var id=$(this).data('id');
+        $('#modalDeleteJab').attr('href','?page=jabatan&action=delete&id='+id);
+    })
+  </script>
+
+  <script>
+    $('.deleteTing').click(function(){
+        var id=$(this).data('id');
+        $('#modalDeleteTing').attr('href','?page=tingkat&action=delete&id='+id);
+    })
+  </script>
+
+  <script>
+    $('.deletePeg').click(function(){
+        var id=$(this).data('id');
+        $('#modalDeletePeg').attr('href','?page=pegawai&action=delete&id='+id);
+    })
   </script>
 
 </body>

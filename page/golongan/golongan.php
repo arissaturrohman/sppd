@@ -56,14 +56,7 @@
                     <a href="?page=golongan&action=edit&id=<?= base64_encode($data['id_golongan']); ?>" class="btn btn-success btn-circle btn-sm">
                       <i class="fas fa-check"></i>
                     </a>
-                    <a href="?page=golongan&action=delete&id=<?= base64_encode($data['id_golongan']); ?>" class="btn btn-danger btn-circle btn-sm delete">
-                      <i class="fas fa-trash-alt"></i>
-                    </a>
-                    <a href="?page=golongan&action=delete&id=<?= base64_encode($data['id_golongan']); ?>" onclick="return swal({ 
- title: ' anda yakin akan hapus data ini? ', text: 'anda tidak akan melihat data ini lagi!' , type: 'warning' , showCancelButton: true, confirmButtonColor: '#DD6B55' , confirmButtonText: 'Yes, delete it!' , closeOnConfirm: false }function() {
-          window.location.href = '?page=golongan'
-        });
-        return false;">
+                    <a href="#myModal" class="btn btn-danger btn-circle btn-sm deleteGol" data-id="<?= $data['id_golongan']; ?>" role="button" data-toggle="modal">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </td>

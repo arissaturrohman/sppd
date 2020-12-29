@@ -55,11 +55,11 @@
                 <td width="2%" class="text-center"><?= $no++; ?></td>
                 <td><?= $data['tingkat']; ?></td>
                 <td width="5%">
-                  <a href="#" class="btn btn-success btn-circle btn-sm">
+                  <a href="?page=tingkat&action=edit&id=<?= base64_encode($data['id_tingkat']); ?>" class="btn btn-success btn-circle btn-sm">
                     <i class="fas fa-check"></i>
                   </a>
-                  <a href="#" class="btn btn-danger btn-circle btn-sm">
-                    <i class="fas fa-trash-alt"></i>
+                  <a href="#myModalTing" class="btn btn-danger btn-circle btn-sm deleteTing" data-id="<?= $data['id_tingkat']; ?>" role="button" data-toggle="modal">
+                      <i class="fas fa-trash-alt"></i>
                   </a>
                 </td>
               </tr>
