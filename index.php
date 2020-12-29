@@ -1,6 +1,7 @@
 <?php
 
 error_reporting(0);
+include('config.php');
 
 ?>
 <!DOCTYPE html>
@@ -14,7 +15,7 @@ error_reporting(0);
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Blank</title>
+  <title>Aplikasi SPPD Kecamatan Gajah</title>
 
   <!-- Custom fonts for this template-->
   <link href="asset/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -22,6 +23,9 @@ error_reporting(0);
 
   <!-- Custom styles for this template-->
   <link href="asset/css/sb-admin-2.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this page -->
+  <link href="asset/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -34,7 +38,7 @@ error_reporting(0);
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
         <div class="sidebar-brand-icon">
           <i class="fas fa-list"></i>
         </div>
@@ -70,7 +74,8 @@ error_reporting(0);
             <h6 class="collapse-header">master</h6>
             <a class="collapse-item" href="?page=pegawai">Pegawai</a>
             <a class="collapse-item" href="?page=jabatan">Jabatan</a>
-            <a class="collapse-item" href="?page=golongan">Golongan</a>
+            <a class="collapse-item" href="?page=golongan">Pangkat / Gol.</a>
+            <a class="collapse-item" href="?page=tingkat">Tingkat SPPD</a>
           </div>
         </div>
       </li>
@@ -198,12 +203,43 @@ error_reporting(0);
             } elseif ($action == "delete") {
               include "page/pegawai/delete.php";
             }
+          } elseif ($page == "golongan") {
+            if ($action == "") {
+              include "page/golongan/golongan.php";
+            } elseif ($action == "add") {
+              include "page/golongan/add.php";
+            } elseif ($action == "edit") {
+              include "page/golongan/edit.php";
+            } elseif ($action == "delete") {
+              include "page/golongan/delete.php";
+            }
+          } elseif ($page == "jabatan") {
+            if ($action == "") {
+              include "page/jabatan/jabatan.php";
+            } elseif ($action == "add") {
+              include "page/jabatan/add.php";
+            } elseif ($action == "edit") {
+              include "page/jabatan/edit.php";
+            } elseif ($action == "delete") {
+              include "page/jabatan/delete.php";
+            }
+          } elseif ($page == "tingkat") {
+            if ($action == "") {
+              include "page/tingkat/tingkat.php";
+            } elseif ($action == "add") {
+              include "page/tingkat/add.php";
+            } elseif ($action == "edit") {
+              include "page/tingkat/edit.php";
+            } elseif ($action == "delete") {
+              include "page/tingkat/delete.php";
+            }
           } else {
             include "dashboard.php";
           }
 
           ?>
-          
+
+
 
         </div>
         <!-- /.container-fluid -->
@@ -260,6 +296,32 @@ error_reporting(0);
 
   <!-- Custom scripts for all pages-->
   <script src="asset/js/sb-admin-2.min.js"></script>
+  <script src="asset/js/sweetalert.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="asset/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="asset/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="asset/js/demo/datatables-demo.js"></script>
+
+  <script>
+    jQuery(document).ready(function($) {
+      $('.delete').on('click', function() {
+        var getLink = $(this).attr('href');
+        swal({
+          title: 'Alert',
+          text: 'Hapus Data?',
+          html: true,
+          confirmButtonColor: '#d9534f',
+          showCancelButton: true,
+        }, function() {
+          window.location.href = "?page=golongan"
+        });
+        return false;
+      });
+    });
+  </script>
 
 </body>
 
