@@ -20,11 +20,24 @@
 
       $pegawai = $conn->query("SELECT * FROM tb_pegawai, tb_jabatan, tb_golongan, tb_tingkat WHERE id_pegawai = '$_SESSION[id_pegawai]' AND tb_pegawai.id_jabatan = tb_jabatan.id_jabatan AND tb_pegawai.id_golongan = tb_golongan.id_golongan AND tb_pegawai.id_tingkat = tb_tingkat.id_tingkat");
       $dataPeg = $pegawai->fetch_assoc();
+
+      // nomor otomatis
+      $query = "SELECT max(nomor_surat) as maxKode FROM tb_sppd";
+      $hasil = mysqli_query($conn,$query);
+      $data = mysqli_fetch_array($hasil);
+      $kodeBarang = $data['maxKode'];
+      $noUrut = (int) substr($kodeBarang, 3, 3) + 1;
+      $noUrut++;
+      $kodeOtomatis = sprintf("%03s", $noUrut);
+      // echo $kodeBarang;
+
+            
       ?>
       <div class="card-body">
         <form action="" method="POST">
           <div class="form-row">
             <input type="hidden" name="id_pegawai" value="<?= $dataPeg['id_pegawai']; ?>">
+            <input type="hidden" name="nomor_sppd" value="<?= $kodeOtomatis; ?>">
             <div class="form-group col-md-4">
               <input type="text" class="form-control" value="<?= $dataPeg['nama_pegawai']; ?>" readonly>
             </div>
@@ -131,6 +144,7 @@
 
   if (isset($_POST['add'])) {
     $id_pegawai = mysqli_real_escape_string($conn, $_POST['id_pegawai']);
+    $nomor_sppd = mysqli_real_escape_string($conn, $_POST['nomor_sppd']);
     $surat = mysqli_real_escape_string($conn, $_POST['surat']);
     $nomor = mysqli_real_escape_string($conn, $_POST['nomor']);
     $tgl_surat = mysqli_real_escape_string($conn, $_POST['tgl_surat']);
@@ -143,10 +157,12 @@
     $pengikut1 = mysqli_real_escape_string($conn, $_POST['pengikut1']);
     $pengikut2 = mysqli_real_escape_string($conn, $_POST['pengikut2']);
     $pengikut3 = mysqli_real_escape_string($conn, $_POST['pengikut3']);
+    $LapKegiatan = "-";
 
-    $sppd = $conn->query("INSERT INTO tb_sppd (id_pegawai, surat, nomor, tgl_surat, perihal, kegiatan, tujuan, lama, tgl_berangkat, tgl_pulang, pengikut1, pengikut2, pengikut3)VALUES('$id_pegawai', '$surat', '$nomor', '$tgl_surat', '$perihal', '$kegiatan', '$tujuan', '$lama', '$berangkat', '$pulang', '$pengikut1', '$pengikut2', '$pengikut3')");
+    $sppd = $conn->query("INSERT INTO tb_sppd (id_pegawai, nomor_sppd, surat, nomor, tgl_surat, perihal, kegiatan, tujuan, lama, tgl_berangkat, tgl_pulang, pengikut1, pengikut2, pengikut3)VALUES('$id_pegawai', '$nomor_sppd', '$surat', '$nomor', '$tgl_surat', '$perihal', '$kegiatan', '$tujuan', '$lama', '$berangkat', '$pulang', '$pengikut1', '$pengikut2', '$pengikut3')");
+    $sqlLap = $conn->query("INSERT INTO tb_laporan (id_pegawai, laporan)VALUES('$id_pegawai', '$LapKegiatan')");
 
-    if ($sppd) {
+    if ($sppd && $sqlLap) {
   ?>
       <script>
         setTimeout(function() {
@@ -174,23 +190,42 @@
           <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
+                <th clas="text-center">No</th>
+                <th clas="text-center">Nomor SPPD</th>
+                <th clas="text-center">Kegiatan</th>
+                <th clas="text-center">Tanggal Kegiatan</th>
+                <th clas="text-center">Tujuan</th>
+                <th clas="text-center">Laporan</th>
+                <th clas="text-center">Action</th>
               </tr>
             </thead>
             <tbody>
+            <?php 
+            $no = 1;
+            $SPPD = $conn->query("SELECT * FROM tb_sppd WHERE id_pegawai = '$_SESSION[id_pegawai]'");
+            while($dataSPPD = $SPPD->fetch_assoc()){
+            ?>
               <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
+                <td width="2%" clas="text-center"><?= $no++; ?></td>
+                <td><?= $dataSPPD['nomor_sppd']; ?></td>
+                <td><?= $dataSPPD['kegiatan']; ?></td>
+                <td><?= $dataSPPD['tgl_berangkat']; ?></td>
+                <td><?= $dataSPPD['tujuan']; ?></td>
+                <?php 
+                $laporan = $conn->query("SELECT * FROM tb_laporan WHERE id_pegawai = '$_SESSION[id_pegawai]'");
+                while($lapSPPD = $laporan->fetch_assoc()){
+                  ?>
+                <td>
+                  <?= $lapSPPD['laporan'];?>
+                </td>
+                <?php } ?>
+                <td clas="text-center">
+                  <a href="?page=sppd&action=add&id=<?= $dataSPPD['id_sppd']; ?>" class="badge badge-primary" title="Input Laporan">Add</a>
+                  <a href="#" class="badge badge-success" title="Edit Laporan">Edit</a>
+                  <a href="#" class="badge badge-danger" title="Hapus Laporan">Delete</a>
+                </td>
               </tr>
+              <?php } ?>
             </tbody>
           </table>
         </div>
