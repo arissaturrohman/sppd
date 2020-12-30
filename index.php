@@ -1,5 +1,9 @@
 <?php
-
+session_start();
+if (!isset($_SESSION["login"])) {
+  header("Location: login.php");
+  exit;
+}
 error_reporting(0);
 include('config.php');
 
@@ -23,6 +27,7 @@ include('config.php');
 
   <!-- Custom styles for this template-->
   <link href="asset/css/sb-admin-2.min.css" rel="stylesheet">
+  <link rel="shortcut icon" href="asset/img/logo.png" type="image/x-icon">
 
   <!-- Custom styles for this page -->
   <link href="asset/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -108,7 +113,7 @@ include('config.php');
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        Addons
+        Laporan
       </div>
 
       <!-- Nav Item - Laporan -->
@@ -118,11 +123,19 @@ include('config.php');
           <span>Laporan</span></a>
       </li>
 
-      <!-- Nav Item - Tables -->
+      <!-- Nav Item - Setting -->
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
           <i class="fas fa-fw fa-cogs"></i>
-          <span>Setting</span></a>
+          <span>Setting</span>
+        </a>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">master</h6>
+            <a class="collapse-item" href="?page=register">User</a>
+            <a class="collapse-item" href="#">OPD</a>
+          </div>
+        </div>
       </li>
 
       <!-- Divider -->
@@ -150,7 +163,11 @@ include('config.php');
             <i class="fa fa-bars"></i>
           </button>
 
+          <?php
+          $nama = $conn->query("SELECT * FROM tb_pegawai WHERE id_pegawai = '$_SESSION[id_pegawai]'");
+          $dataNama = $nama->fetch_assoc();
 
+          ?>
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -158,7 +175,7 @@ include('config.php');
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $dataNama['nama_pegawai']; ?></span>
                 <img class="img-profile rounded-circle" src="asset/img/undraw_profile.svg">
               </a>
               <!-- Dropdown - User Information -->
@@ -243,6 +260,16 @@ include('config.php');
             } elseif ($action == "delete") {
               include "page/sppd/delete.php";
             }
+          } elseif ($page == "register") {
+            if ($action == "") {
+              include "page/register.php";
+            } elseif ($action == "add") {
+              include "page/sppd/add.php";
+            } elseif ($action == "edit") {
+              include "page/sppd/edit.php";
+            } elseif ($action == "delete") {
+              include "page/sppd/delete.php";
+            }
           } else {
             include "dashboard.php";
           }
@@ -291,91 +318,92 @@ include('config.php');
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
+          <a class="btn btn-primary" href="logout.php">Logout</a>
         </div>
       </div>
     </div>
   </div>
 
-<!-- Modal Hapus Golongan -->
+  <!-- Modal Hapus Golongan -->
   <div class="modal small fade" id="myModalGol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 
-            </div>
-            <div class="modal-body">
-                Yakin menghapus data ini..?
-            </div>
-            <div class="modal-footer">
-               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger"  id="modalDeleteGol" >Delete</a>
-
-            </div>
         </div>
-    </div>
-</div>
+        <div class="modal-body">
+          Yakin menghapus data ini..?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger" id="modalDeleteGol">Delete</a>
 
-<!-- Modal Hapus Jabatan -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Hapus Jabatan -->
   <div class="modal small fade" id="myModalJab" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 
-            </div>
-            <div class="modal-body">
-                Yakin menghapus data ini..?
-            </div>
-            <div class="modal-footer">
-               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger"  id="modalDeleteJab" >Delete</a>
-
-            </div>
         </div>
-    </div>
-</div>
+        <div class="modal-body">
+          Yakin menghapus data ini..?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger" id="modalDeleteJab">Delete</a>
 
-<!-- Modal Hapus Tingkat -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Hapus Tingkat -->
   <div class="modal small fade" id="myModalTing" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 
-            </div>
-            <div class="modal-body">
-                Yakin menghapus data ini..?
-            </div>
-            <div class="modal-footer">
-               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger"  id="modalDeleteTing" >Delete</a>
-
-            </div>
         </div>
-    </div>
-</div>
+        <div class="modal-body">
+          Yakin menghapus data ini..?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button> <a href="#" class="btn btn-danger" id="modalDeleteTing">Delete</a>
 
-<!-- Modal Hapus Pegawai -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Hapus Pegawai -->
   <div class="modal small fade" id="myModalPeg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                 <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Delete Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 
-            </div>
-            <div class="modal-body">
-                Yakin menghapus data ini..?
-            </div>
-            <div class="modal-footer">
-               <button class="btn btn-secondary"data-dismiss="modal" aria-hidden="true">Cancel</button> 
-               <a href="#" class="btn btn-danger"  id="modalDeletePeg" >Delete</a>
-            </div>
         </div>
+        <div class="modal-body">
+          Yakin menghapus data ini..?
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          <a href="#" class="btn btn-danger" id="modalDeletePeg">Delete</a>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+
 
   <!-- Bootstrap core JavaScript-->
   <script src="asset/vendor/jquery/jquery.min.js"></script>
@@ -396,30 +424,30 @@ include('config.php');
   <script src="asset/js/demo/datatables-demo.js"></script>
 
   <script>
-    $('.deleteGol').click(function(){
-        var id=$(this).data('id');
-        $('#modalDeleteGol').attr('href','?page=golongan&action=delete&id='+id);
+    $('.deleteGol').click(function() {
+      var id = $(this).data('id');
+      $('#modalDeleteGol').attr('href', '?page=golongan&action=delete&id=' + id);
     })
   </script>
 
   <script>
-    $('.deleteJab').click(function(){
-        var id=$(this).data('id');
-        $('#modalDeleteJab').attr('href','?page=jabatan&action=delete&id='+id);
+    $('.deleteJab').click(function() {
+      var id = $(this).data('id');
+      $('#modalDeleteJab').attr('href', '?page=jabatan&action=delete&id=' + id);
     })
   </script>
 
   <script>
-    $('.deleteTing').click(function(){
-        var id=$(this).data('id');
-        $('#modalDeleteTing').attr('href','?page=tingkat&action=delete&id='+id);
+    $('.deleteTing').click(function() {
+      var id = $(this).data('id');
+      $('#modalDeleteTing').attr('href', '?page=tingkat&action=delete&id=' + id);
     })
   </script>
 
   <script>
-    $('.deletePeg').click(function(){
-        var id=$(this).data('id');
-        $('#modalDeletePeg').attr('href','?page=pegawai&action=delete&id='+id);
+    $('.deletePeg').click(function() {
+      var id = $(this).data('id');
+      $('#modalDeletePeg').attr('href', '?page=pegawai&action=delete&id=' + id);
     })
   </script>
 
