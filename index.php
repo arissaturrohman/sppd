@@ -102,7 +102,14 @@ include('config.php');
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">master</h6>
+            <?php 
+            if ($_SESSION['level'] == "admin") {
+              ?>
+            <a class="collapse-item" href="?page=sppd&action=add_admin">SPPD</a>
+              <?php } else {
+            ?>
             <a class="collapse-item" href="?page=sppd">SPPD</a>
+            <?php } ?>
             <a class="collapse-item" href="#">Cetak SPPD</a>
           </div>
         </div>
@@ -256,6 +263,9 @@ include('config.php');
             } elseif ($action == "add") {
               include "page/sppd/add.php";
             } elseif ($action == "edit") {
+            } elseif ($action == "add_admin") {
+              include "page/sppd/add_admin.php";
+            } elseif ($action == "edit") {
               include "page/sppd/edit.php";
             } elseif ($action == "delete") {
               include "page/sppd/delete.php";
@@ -404,6 +414,75 @@ include('config.php');
     </div>
   </div>
 
+  <!-- Modal Input Admin -->
+<div class="modal fade" id="inputModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <table class="table" id="dataTable">
+        <thead>
+          <tr>
+            <th>Nama Pegawai</th>
+            <th>NIP</th>
+            <th>Jabatan</th>
+            <th>Golongan</th>
+            <th>Tingkat</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+
+          $sql = $conn->query("SELECT * FROM tb_pegawai");
+          while ($data = $sql->fetch_assoc()) { ?>
+          <tr>            
+            <td style="font-size:12px;"><?= $data['nama_pegawai']; ?></td>
+            <td style="font-size:12px;"><?= $data['nip']; ?></td>
+            <td style="font-size:12px;">
+            <?php             
+            $jab = $conn->query("SELECT * FROM tb_jabatan WHERE id_jabatan = '$data[id_jabatan]'");
+            $dataJab = $jab->fetch_assoc();
+            echo $dataJab['jabatan']; 
+            ?>
+            </td>
+            <td style="font-size:12px;">
+            <?php
+            $gol = $conn->query("SELECT * FROM tb_golongan WHERE id_golongan = '$data[id_golongan]'");
+            $dataGol = $gol->fetch_assoc();
+            echo $dataGol['golongan']; 
+            ?>
+            </td> 
+            <td style="font-size:12px;">           
+            <?php
+            $tingkat = $conn->query("SELECT * FROM tb_tingkat WHERE id_tingkat = '$data[id_tingkat]'");
+            $dataTingkat = $tingkat->fetch_assoc();
+            echo $dataTingkat['tingkat']; 
+            ?>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-info" id="pegawai" data-id="<?= $data['id_pegawai']; ?>" data-pegawai="<?= $data['nama_pegawai']; ?>" data-nip="<?= $data['nip']; ?>" data-jabatan="<?= $dataJab['jabatan']; ?>" data-golongan="<?= $dataGol['golongan']; ?>" data-tingkat="<?= $dataTingkat['tingkat']; ?>">
+                <i class=" fas fa-check"></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+          <?php } ?>
+      </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <!-- Bootstrap core JavaScript-->
   <script src="asset/vendor/jquery/jquery.min.js"></script>
@@ -448,6 +527,26 @@ include('config.php');
     $('.deletePeg').click(function() {
       var id = $(this).data('id');
       $('#modalDeletePeg').attr('href', '?page=pegawai&action=delete&id=' + id);
+    })
+  </script>
+
+<script>
+    $(document).ready(function() {
+      $(document).on('click', '#pegawai', function() {
+        var id_pegawai = $(this).data('id');
+        var pegawai = $(this).data('pegawai');
+        var nip = $(this).data('nip');
+        var jabatan = $(this).data('jabatan');
+        var golongan = $(this).data('golongan');
+        var tingkat = $(this).data('tingkat');
+        $('#id_pegawai').val(id_pegawai);
+        $('#pegawai').val(pegawai);
+        $('#nip').val(nip);
+        $('#jabatan').val(jabatan);
+        $('#golongan').val(golongan);
+        $('#tingkat').val(tingkat);
+        $('#inputModal').modal('hide');
+      })
     })
   </script>
 

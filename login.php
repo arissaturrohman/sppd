@@ -92,7 +92,7 @@ if (isset($_POST['login'])) {
                   <?php endif; ?>
                   <form class="user" method="post">
                     <div class="form-group">
-                      <input type="text" class="form-control form-control-user" name="nip" placeholder="Masukkan NIP">
+                      <input type="text" class="form-control form-control-user" name="nip" placeholder="Masukkan NIP" autofocus>
                     </div>
                     <div class="form-group">
                       <input type="password" class="form-control form-control-user" name="password" placeholder="Masukkan Password">

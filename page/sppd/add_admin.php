@@ -42,24 +42,24 @@
       <div class="card-body">
         <form action="" method="POST">
           <div class="form-row">
-            <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?= $dataPeg['id_pegawai']; ?>">
+            <input type="hidden" name="id_pegawai" id="id_pegawai" >
             <input type="hidden" name="nomor_sppd" id="nomor_sppd" value="<?= $kodeOtomatis; ?>">
             <div class="form-group col-md-4">
-              <input type="text" class="form-control" id="nama_pegawai" value="<?= $dataPeg['nama_pegawai']; ?>" readonly>
+              <input type="text" class="form-control" id="pegawai" name="pegawai" readonly>
             </div>
             <div class="form-group col-md-4">
-              <input type="text" class="form-control" id="nip" value="<?= $dataPeg['nip']; ?>" readonly>
+              <input type="text" class="form-control" id="nip" readonly>
             </div>
             <div class="form-group col-md-4">
-              <input type="text" class="form-control" id="jabatan" value="<?= $dataPeg['jabatan']; ?>" readonly>
+              <input type="text" class="form-control" id="jabatan" name="jabatan" readonly>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col">
-              <input type="text" class="form-control" id="golongan" value="<?= $dataPeg['golongan']; ?>" readonly>
+              <input type="text" class="form-control" id="golongan" name="golongan" readonly>
             </div>
             <div class="form-group col">
-              <input type="text" class="form-control" id="tingkat" value="<?= $dataPeg['tingkat']; ?>" readonly>
+              <input type="text" class="form-control" id="tingkat" name="tingkat" readonly>
             </div>
           </div>
           <div class="form-row">
@@ -178,7 +178,7 @@
           });
         }, 10);
         window.setTimeout(function() {
-          window.location.replace('?page=sppd');
+          window.location.replace('?page=sppd&action=add_admin');
         }, 4000);
       </script>
   <?php
@@ -208,7 +208,7 @@
             <tbody>
             <?php 
             $no = 1;
-            $SPPD = $conn->query("SELECT * FROM tb_sppd WHERE id_pegawai = '$_SESSION[id_pegawai]'");
+            $SPPD = $conn->query("SELECT * FROM tb_sppd");
             while($dataSPPD = $SPPD->fetch_assoc()){
             ?>
               <tr>
@@ -218,11 +218,18 @@
                 <td><?= $dataSPPD['tgl_berangkat']; ?></td>
                 <td><?= $dataSPPD['tujuan']; ?></td>
                 <?php 
-                $laporan = $conn->query("SELECT * FROM tb_laporan WHERE id_pegawai = '$_SESSION[id_pegawai]'");
+                $laporan = $conn->query("SELECT * FROM tb_laporan");
                 while($lapSPPD = $laporan->fetch_assoc()){
                   ?>
                 <td>
-                  <?= $lapSPPD['laporan'];?>
+                <?php 
+                if ($lapSPPD['laporan'] == "-") {
+                  echo "Belum";
+                } else {
+                  echo $lapSPPD['laporan'];
+                }
+                ?>
+                <!-- belum clear, kendala di logika -->
                 </td>
                 <?php } ?>
                 <td clas="text-center">
